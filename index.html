@@ -31,6 +31,7 @@
   <div class="search" role="search">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
     <input id="search-input" type="text" placeholder="invocar comando…" />
+    <span id="search-count" class="search-count" hidden></span>
     <span class="kbd">⌘ K</span>
   </div>
 </header>
@@ -67,6 +68,15 @@
     <span class="dot"></span>
     <span>Slash &amp; Prefixo</span>
   </div>
+
+  <a class="hero-invite"
+     href="https://discord.com/oauth2/authorize?client_id=1502521045259780177&amp;permissions=2150976512&amp;integration_type=0&amp;scope=bot+applications.commands"
+     target="_blank" rel="noopener noreferrer">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+    </svg>
+    Adicionar ao servidor
+  </a>
 </section>
 
 <div class="divider" role="presentation"><span class="lozenge"></span></div>
@@ -686,46 +696,102 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
 <script>
 (function () {
   // ---- Search filter ----
-  const input = document.getElementById('search-input');
+  const input    = document.getElementById('search-input');
+  const countEl  = document.getElementById('search-count');
+  const kbdEl    = document.querySelector('.search .kbd');
   const sections = Array.from(document.querySelectorAll('section.doc'));
-  const rows = Array.from(document.querySelectorAll('.grimoire-row'));
   const tocLinks = Array.from(document.querySelectorAll('.sidebar a'));
 
-  function applyFilter(q) {
-    q = q.trim().toLowerCase();
+  function applyFilter(raw) {
+    // Normalize: strip leading / or ! so "/rolar" and "rolar" are equivalent
+    const q = raw.trim().toLowerCase().replace(/^[/!]+/, '');
+
     if (!q) {
-      rows.forEach(r => r.removeAttribute('data-filter-hide'));
+      document.querySelectorAll('.grimoire-row').forEach(r => r.removeAttribute('data-filter-hide'));
       sections.forEach(s => s.removeAttribute('data-filter-hide'));
       tocLinks.forEach(a => a.removeAttribute('data-filter-hide'));
+      countEl.hidden = true;
+      kbdEl.hidden = false;
       return;
     }
+
+    let firstVisible = null;
+    let totalRows = 0;
+
     sections.forEach(s => {
-      let any = false;
-      const local = Array.from(s.querySelectorAll('.grimoire-row'));
-      local.forEach(r => {
-        const t = r.textContent.toLowerCase();
-        if (t.includes(q)) { r.removeAttribute('data-filter-hide'); any = true; }
-        else r.setAttribute('data-filter-hide', '');
+      const rows = Array.from(s.querySelectorAll('.grimoire-row'));
+      let rowHits = 0;
+
+      rows.forEach(r => {
+        // Strip slashes/bangs from the row text so "/rolar" matches query "rolar"
+        const text = r.textContent.toLowerCase().replace(/[/!]/g, '');
+        if (text.includes(q)) {
+          r.removeAttribute('data-filter-hide');
+          rowHits++;
+        } else {
+          r.setAttribute('data-filter-hide', '');
+        }
       });
-      // Also keep section visible if its title or lede matches
-      const titleMatch = (s.textContent.slice(0, 600) || '').toLowerCase().includes(q);
-      if (any || titleMatch) s.removeAttribute('data-filter-hide');
-      else s.setAttribute('data-filter-hide', '');
+
+      // Also match against section heading and lede paragraph
+      const h2Text   = (s.querySelector('h2')?.textContent   || '').toLowerCase();
+      const ledeText = (s.querySelector('p.lede')?.textContent || '').toLowerCase();
+      const titleMatch = h2Text.includes(q) || ledeText.includes(q);
+
+      if (rowHits > 0 || titleMatch) {
+        s.removeAttribute('data-filter-hide');
+        if (titleMatch && rowHits === 0) {
+          // Heading matched but no individual row did — show all rows in this section
+          rows.forEach(r => r.removeAttribute('data-filter-hide'));
+          totalRows += rows.length;
+        } else {
+          totalRows += rowHits;
+        }
+        if (!firstVisible) firstVisible = s;
+      } else {
+        s.setAttribute('data-filter-hide', '');
+      }
     });
-    // TOC: hide links to hidden sections
+
+    // Scroll to the first matching section
+    if (firstVisible) {
+      window.scrollTo({
+        top: firstVisible.getBoundingClientRect().top + window.scrollY - 84,
+        behavior: 'smooth'
+      });
+    }
+
+    // Update TOC links
     tocLinks.forEach(a => {
-      const id = a.getAttribute('href').slice(1);
+      const id     = a.getAttribute('href').slice(1);
       const target = document.getElementById(id);
-      if (target && target.hasAttribute('data-filter-hide')) a.setAttribute('data-filter-hide', '');
+      if (target?.hasAttribute('data-filter-hide')) a.setAttribute('data-filter-hide', '');
       else a.removeAttribute('data-filter-hide');
     });
+
+    // Update result counter
+    kbdEl.hidden   = true;
+    countEl.hidden = false;
+    countEl.textContent = totalRows === 0
+      ? 'sem resultados'
+      : `${totalRows} resultado${totalRows !== 1 ? 's' : ''}`;
   }
+
   input.addEventListener('input', e => applyFilter(e.target.value));
 
-  // Cmd/Ctrl+K to focus
+  // Cmd/Ctrl+K — focus the search bar
   window.addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault(); input.focus(); input.select();
+    }
+  });
+
+  // Escape — clear and close
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      input.value = '';
+      applyFilter('');
+      input.blur();
     }
   });
 
@@ -747,7 +813,7 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
   tocLinks.forEach(a => {
     a.addEventListener('click', e => {
       const id = a.getAttribute('href').slice(1);
-      const t = document.getElementById(id);
+      const t  = document.getElementById(id);
       if (t) {
         e.preventDefault();
         window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });

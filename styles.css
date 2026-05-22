@@ -266,6 +266,33 @@ body {
 }
 .hero .glyph-row .dot { width: 4px; height: 4px; background: var(--orchid); border-radius: 50%; }
 
+/* ----- Hero invite button ----- */
+.hero-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  padding: 13px 28px;
+  background: #5865f2;
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--radius);
+  font-family: var(--display);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 24px rgba(88, 101, 242, 0.35);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+}
+.hero-invite:hover {
+  background: #4752c4;
+  box-shadow: 0 6px 32px rgba(88, 101, 242, 0.5);
+  transform: translateY(-2px);
+}
+.hero-invite:active { transform: translateY(0); }
+[data-motion="reduced"] .hero-invite { transition: none; }
+
 @keyframes breathe {
   0%, 100% { opacity: 0.85; transform: scale(1); }
   50%      { opacity: 1;    transform: scale(1.04); }
@@ -672,6 +699,14 @@ footer.foot .sigil {
 
 /* ----- Search filter dim ----- */
 [data-filter-hide] { display: none !important; }
+
+.topbar .search .search-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--orchid);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
 /* ----- Highlights inline ----- */
 .kw { color: var(--orchid); font-family: var(--mono); font-size: 0.92em; }
