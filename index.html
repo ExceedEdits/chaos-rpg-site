@@ -178,6 +178,7 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd"><b>&amp;15+3</b></span><span class="desc">Avalia uma expressão matemática pura.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>2d6+5</b> Ataque</span><span class="desc">Rolagem com rótulo livre.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>1d20</b> iniciativa Ada</span><span class="desc">Registra a iniciativa de Ada na ordem do combate.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>2d6</b> dano Ada</span><span class="desc">Aplica o resultado como dano direto ao personagem Ada.</span></div>
   </div>
 
   <h3>Via comando</h3>
@@ -261,6 +262,18 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
 
 <pre data-lang="exemplo">/<span class="tk-key">personagem criar</span> nome:<span class="tk-str">Ada</span> hp:<span class="tk-num">40</span> emoji:<span class="tk-str">🧝</span> jogador:<span class="tk-tag">@fulano</span>
 /<span class="tk-key">personagem editar</span> nome:<span class="tk-str">Ada</span> hp:<span class="tk-num">50</span></pre>
+
+  <h3>Opções de criar / editar</h3>
+  <div class="grimoire two-narrow">
+    <div class="grimoire-head"><span>Opção</span><span>Descrição</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>emoji:</b></span><span class="desc">Emoji representativo no mapa.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>time:</b></span><span class="desc">Emoji de time (ex.: 🟢 aliado, 🔴 inimigo).</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>jogador:</b></span><span class="desc">@usuário associado ao personagem.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>escudo:</b></span><span class="desc">Valor máximo de escudo arcano.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>salvaguarda:</b></span><span class="desc">Se o escudo bloqueia dano excedente ao HP.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>crit_threshold:</b></span><span class="desc">Aviso de HP crítico quando HP ≤ N.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>overheal:</b></span><span class="desc">Cura além do HP máximo: <em>cap</em> (ignora) ou <em>shield</em> (converte em escudo).</span></div>
+  </div>
 </section>
 
 <!-- COMBATE DIRETO ============================ -->
@@ -450,6 +463,8 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd">/<b>mapa celula</b> pos tipo</span><span class="desc">Altera uma célula individual.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa legenda</b> emoji descricao</span><span class="desc">Adiciona entrada na legenda.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa carregar</b> id</span><span class="desc">Troca o mapa ativo da sessão.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>mapa terreno</b> tipo x y</span><span class="desc">Define o terreno de uma célula do grid. <em>mestre</em></span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>mapa remover</b> nome</span><span class="desc">Remove um elemento do mapa. <em>mestre</em></span></div>
   </div>
 
 <pre data-lang="exemplo">/<span class="tk-key">mapa criar</span>     id:<span class="tk-str">arena</span> nome:<span class="tk-str">Arena</span> colunas:<span class="tk-num">6</span> linhas:<span class="tk-num">5</span> padrao:<span class="tk-str">⬜</span>
@@ -461,6 +476,7 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa mostrar</b></span><span class="desc">Posta o mapa no canal.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa atualizar</b></span><span class="desc">Força a re-renderização da mensagem.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>mapa listar</b></span><span class="desc">Lista todos os mapas disponíveis na sessão.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa config</b></span><span class="desc">Personagens no grid ou no texto, visibilidade dos painéis.</span></div>
   </div>
 
@@ -607,16 +623,18 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
   <div class="eyebrow">xiii · sistema</div>
   <h2>Configurações</h2>
   <p class="lede">
-    Separe o canal das rolagens do canal do mapa. Fixe o tracker em uma única mensagem editável.
-    Decida se status decrementam por rodada ou por turno.
+    Separe canais, defina o cargo de Mestre, controle se o bot lê dados em mensagens comuns, fixe o tracker
+    e escolha como os status decrementam.
   </p>
 
   <div class="grimoire">
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>config ver</b></span><span class="desc">Exibe todas as configurações atuais.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>config cargo-mestre</b> cargo</span><span class="desc">Define o cargo com permissões de Mestre no servidor. <em>admin</em></span></div>
     <div class="grimoire-row"><span class="cmd">/<b>config prefixo</b></span><span class="desc">Muda o prefixo de texto do servidor. <em>mestre</em></span></div>
     <div class="grimoire-row"><span class="cmd">/<b>config canal</b> destino canal</span><span class="desc">Define canal de saída para mapa ou tracker.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>config tracker</b> fixo decremento</span><span class="desc">Configura modo do tracker e decremento de status.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>config listener-dado</b> estado</span><span class="desc">Ativa ou desativa a rolagem automática em mensagens comuns. <em>mestre</em></span></div>
   </div>
 
   <h3>Canal de saída</h3>
@@ -633,6 +651,26 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
     <div class="grimoire-head"><span>Modo</span><span>Comportamento</span></div>
     <div class="grimoire-row"><span class="cmd"><b>Por rodada</b></span><span class="desc">Todos os status decrementam juntos ao virar a rodada.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>Por turno</b></span><span class="desc">Cada personagem decrementa seus próprios status ao fim do próprio turno.</span></div>
+  </div>
+
+  <h3>Listener de dados</h3>
+  <p>Controla se o bot responde a dados escritos em mensagens normais, sem precisar de <code>/rolar</code> ou prefixo.</p>
+  <div class="grimoire two-narrow">
+    <div class="grimoire-head"><span>Estado</span><span>Comportamento</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>Ativo</b></span><span class="desc">Detecta e rola <code>2d6</code>, <code>1d20+5</code> etc. em qualquer mensagem.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>Inativo</b></span><span class="desc">Ignora mensagens; use <code>/rolar</code> ou o prefixo de texto.</span></div>
+  </div>
+<pre data-lang="listener">/<span class="tk-key">config listener-dado</span> estado:<span class="tk-str">Ativo</span>
+/<span class="tk-key">config listener-dado</span> estado:<span class="tk-str">Inativo</span></pre>
+
+  <h3>Cargo de Mestre</h3>
+  <p>Define qual cargo do servidor tem permissões de Mestre. Requer permissão de Administrador. Sem configuração, o bot usa o nome definido em <code>MASTER_ROLE</code> no <code>.env</code>.</p>
+<pre data-lang="cargo">/<span class="tk-key">config cargo-mestre</span> cargo:<span class="tk-tag">@Mestre</span></pre>
+
+  <h3>Ajuda</h3>
+  <div class="grimoire">
+    <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>help</b></span><span class="desc">Lista todos os comandos disponíveis com link para a documentação.</span></div>
   </div>
 </section>
 
