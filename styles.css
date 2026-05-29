@@ -729,3 +729,139 @@ body::before {
 [data-ornaments="off"] body::before { display: none; }
 
 main, .topbar, .hero, footer { position: relative; z-index: 1; }
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+/* ── 1024px — estreitar barra de busca ──────────────────────── */
+@media (max-width: 1024px) {
+  .topbar .search { width: 220px; }
+}
+
+/* ── 960px — ocultar nav, sidebar vira pilulas ──────────────── */
+@media (max-width: 960px) {
+  /* Esconde os links da topbar (sidebar assume navegação) */
+  .topbar nav { display: none; }
+  .topbar .search { margin-left: auto; }
+
+  /* Sidebar → faixa de pilulas com quebra de linha */
+  .sidebar {
+    position: static !important;
+    max-height: none;
+    overflow: visible;
+    padding: 0 0 16px;
+    padding-right: 0;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+    /* Flex wrapping */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  /* Cada grupo participa diretamente no flex do sidebar */
+  .sidebar .toc-group { display: contents; }
+  .sidebar .toc-group h4 { display: none; }
+
+  /* Pilulas */
+  .sidebar a {
+    border-left: none;
+    border: 1px solid var(--rule);
+    background: var(--obsidian);
+    padding: 5px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+    letter-spacing: 0.06em;
+  }
+  .sidebar a:hover {
+    border-color: var(--orchid);
+    background: rgba(139, 92, 246, 0.10);
+    color: var(--moonlight);
+    padding-left: 12px;
+  }
+  .sidebar a.active {
+    border-color: var(--accent);
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--moonlight);
+    padding-left: 12px;
+  }
+}
+
+/* ── 768px — hero, padding, band grid ───────────────────────── */
+@media (max-width: 768px) {
+  .topbar { padding: 12px 20px; gap: 16px; }
+
+  /* Hero */
+  .hero { padding: 72px 20px 56px; }
+  .hero .glyph-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 20px;
+  }
+
+  /* Quick start cards empilham */
+  .band { padding: 0 20px 56px; }
+  .band-grid { grid-template-columns: 1fr; }
+
+  /* Layout */
+  .layout { padding: 0 20px 80px; }
+}
+
+/* ── 640px — grimoires, títulos, callout, busca ─────────────── */
+@media (max-width: 640px) {
+  /* Busca */
+  .topbar .search { width: 180px; }
+  .topbar .search .kbd { display: none; }
+
+  /* Títulos de seção com clamp fluido */
+  section.doc h2 { font-size: clamp(26px, 7.5vw, 40px); }
+  section.doc h3 { font-size: 17px; }
+
+  /* Grimoires: cabeçalho oculto, linhas empilhadas cmd → desc */
+  .grimoire-head { display: none; }
+
+  .grimoire-row,
+  .grimoire.three    .grimoire-row,
+  .grimoire.two-narrow .grimoire-row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 12px 16px;
+  }
+
+  /* Descrição recuada com borda esquerda para distinguir da cmd */
+  .grimoire-row .desc {
+    font-size: 14px;
+    padding-left: 10px;
+    border-left: 2px solid var(--rule);
+  }
+
+  /* No three-col: coluna do meio (ex: sintaxe) também recuada */
+  .grimoire.three .grimoire-row > span:nth-child(2) {
+    padding-left: 10px;
+    border-left: 2px solid var(--rule);
+  }
+
+  /* Callout: remove espaço do ícone no lado esquerdo */
+  .callout { padding: 16px 18px; }
+  .callout::before { display: none; }
+
+  /* Hero */
+  .hero { padding: 56px 16px 44px; }
+  .hero-invite { padding: 11px 22px; font-size: 0.82rem; }
+}
+
+/* ── 480px — celulares pequenos ─────────────────────────────── */
+@media (max-width: 480px) {
+  .topbar { padding: 10px 16px; gap: 10px; }
+  .topbar .search { width: 140px; }
+
+  .hero { padding: 44px 16px 40px; }
+
+  .band  { padding-left: 16px; padding-right: 16px; }
+  .layout { padding-left: 16px; padding-right: 16px; }
+
+  .tree { padding: 20px 16px; font-size: 11.5px; }
+
+  footer.foot { padding: 36px 16px 24px; }
+}
