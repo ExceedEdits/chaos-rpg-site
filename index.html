@@ -34,6 +34,11 @@
     <span id="search-count" class="search-count" hidden></span>
     <span class="kbd">⌘ K</span>
   </div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </header>
 
 <!-- ============================== HERO ============================== -->
@@ -859,6 +864,51 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
       }
     });
   });
+
+  // ---- Mobile drawer nav ----
+  const navToggle  = document.getElementById('nav-toggle');
+  const sidebarEl  = document.querySelector('.sidebar');
+  const mobileQ    = window.matchMedia('(max-width: 960px)');
+
+  // Backdrop criado dinamicamente
+  const backdrop = document.createElement('div');
+  backdrop.className = 'nav-backdrop';
+  document.body.appendChild(backdrop);
+
+  function openMenu() {
+    sidebarEl.classList.add('is-open');
+    backdrop.classList.add('is-active');
+    navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'Fechar menu');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    sidebarEl.classList.remove('is-open');
+    backdrop.classList.remove('is-active');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Menu');
+    document.body.style.overflow = '';
+  }
+
+  navToggle.addEventListener('click', () => {
+    sidebarEl.classList.contains('is-open') ? closeMenu() : openMenu();
+  });
+  backdrop.addEventListener('click', closeMenu);
+
+  // Escape fecha o drawer (além de limpar a busca)
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && sidebarEl.classList.contains('is-open')) closeMenu();
+  });
+
+  // Fecha ao clicar em qualquer link do ToC no mobile
+  tocLinks.forEach(a => {
+    a.addEventListener('click', () => {
+      if (mobileQ.matches) closeMenu();
+    });
+  });
+
+  // Garante que o drawer fecha ao girar o dispositivo para landscape
+  mobileQ.addEventListener('change', e => { if (!e.matches) closeMenu(); });
 })();
 </script>
 

@@ -739,52 +739,97 @@ main, .topbar, .hero, footer { position: relative; z-index: 1; }
   .topbar .search { width: 220px; }
 }
 
-/* ── 960px — ocultar nav, sidebar vira pilulas ──────────────── */
+/* --- Hamburger button (oculto no desktop) --- */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5.5px;
+  width: 36px; height: 36px;
+  padding: 7px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-toggle span {
+  display: block;
+  width: 100%; height: 1.5px;
+  background: var(--orchid);
+  transform-origin: center;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+[data-motion="reduced"] .nav-toggle span { transition: none; }
+
+/* --- Backdrop --- */
+.nav-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(5, 2, 8, 0.72);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 45;
+}
+.nav-backdrop.is-active { display: block; }
+
+/* ── 960px — hamburger + sidebar drawer ─────────────────────── */
 @media (max-width: 960px) {
-  /* Esconde os links da topbar (sidebar assume navegação) */
   .topbar nav { display: none; }
   .topbar .search { margin-left: auto; }
 
-  /* Sidebar → faixa de pilulas com quebra de linha */
-  .sidebar {
-    position: static !important;
-    max-height: none;
-    overflow: visible;
-    padding: 0 0 16px;
-    padding-right: 0;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--rule);
-    /* Flex wrapping */
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: flex-start;
-  }
-  /* Cada grupo participa diretamente no flex do sidebar */
-  .sidebar .toc-group { display: contents; }
-  .sidebar .toc-group h4 { display: none; }
+  /* Exibe o botão hamburger */
+  .nav-toggle { display: flex; }
 
-  /* Pilulas */
+  /* Sidebar → drawer lateral deslizante */
+  .sidebar {
+    position: fixed !important;
+    top: 0; left: 0; bottom: 0;
+    width: min(300px, 82vw);
+    max-height: 100vh;
+    overflow-y: auto;
+    z-index: 46;
+    background: var(--shadow);
+    border-right: 1px solid var(--rule-strong);
+    /* Padding superior libera espaço para a topbar */
+    padding: 64px 24px 40px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--vein) transparent;
+    /* Animação de entrada */
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Reset estilos anteriores */
+    display: block;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  .sidebar.is-open { transform: translateX(0); }
+  [data-motion="reduced"] .sidebar { transition: none; }
+
+  /* Estilo vertical restaurado dentro do drawer */
+  .sidebar .toc-group { display: block; margin-bottom: 22px; }
+  .sidebar .toc-group h4 { display: block; }
   .sidebar a {
-    border-left: none;
-    border: 1px solid var(--rule);
-    background: var(--obsidian);
-    padding: 5px 12px;
-    font-size: 12px;
-    white-space: nowrap;
-    letter-spacing: 0.06em;
+    border: none;
+    border-left: 1px solid var(--rule);
+    background: transparent;
+    padding: 5px 0 5px 14px;
+    font-size: 13px;
+    white-space: normal;
+    letter-spacing: 0.04em;
   }
   .sidebar a:hover {
-    border-color: var(--orchid);
-    background: rgba(139, 92, 246, 0.10);
     color: var(--moonlight);
-    padding-left: 12px;
+    border-left-color: var(--orchid);
+    padding-left: 14px;
   }
   .sidebar a.active {
-    border-color: var(--accent);
-    background: rgba(139, 92, 246, 0.15);
     color: var(--moonlight);
-    padding-left: 12px;
+    border-left-color: var(--accent);
+    background: linear-gradient(90deg, rgba(139,92,246,0.10), transparent);
+    padding-left: 14px;
   }
 }
 
