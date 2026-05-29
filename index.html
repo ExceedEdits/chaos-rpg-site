@@ -149,11 +149,13 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
   <div class="toc-group">
     <h4>Trilha sonora</h4>
     <a href="#musica">Música</a>
+    <a href="#musica-loop">Repetição</a>
   </div>
   <div class="toc-group">
     <h4>Sistema</h4>
     <a href="#prefixo">Prefixo</a>
     <a href="#config">Configurações</a>
+    <a href="#permissoes">Permissões</a>
     <a href="#estrutura">Estrutura</a>
   </div>
 </aside>
@@ -184,12 +186,17 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd"><b>2d6+5</b> Ataque</span><span class="desc">Rolagem com rótulo livre.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>1d20</b> iniciativa Ada</span><span class="desc">Registra a iniciativa de Ada na ordem do combate.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>2d6</b> dano Ada</span><span class="desc">Aplica o resultado como dano direto ao personagem Ada.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>1d6</b> curar Ada</span><span class="desc">Aplica o resultado como cura direta ao personagem Ada.</span></div>
   </div>
 
   <h3>Via comando</h3>
   <div class="examples">
-<pre data-lang="slash">/<span class="tk-key">rolar</span> expressao:<span class="tk-str">2d6+5</span></pre>
-<pre data-lang="prefixo">!<span class="tk-key">rolar</span> <span class="tk-str">2d6+5</span></pre>
+<pre data-lang="slash">/<span class="tk-key">rolar</span> expressao:<span class="tk-str">2d6+5</span>
+/<span class="tk-key">rolar</span> expressao:<span class="tk-str">3d8 dano Goblin</span>
+/<span class="tk-key">rolar</span> expressao:<span class="tk-str">1d6 curar Thorin</span>
+/<span class="tk-key">rolar</span> expressao:<span class="tk-str">1d20 iniciativa Ada</span></pre>
+<pre data-lang="prefixo">!<span class="tk-key">rolar</span> <span class="tk-str">2d6+5</span>
+!<span class="tk-key">rolar</span> <span class="tk-str">3d8 dano Goblin</span></pre>
   </div>
 </section>
 
@@ -238,11 +245,19 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd"><b>allBest</b> — Todas + destaque</span><span class="desc">Idem, com destaque no maior resultado.</span></div>
   </div>
 
-  <div class="callout">
-    <strong>Receita: dado explosivo.</strong> Rerola enquanto sair 6, no máximo 5 vezes; ao sair 6, soma 1d8 e anuncia <span class="italic">“Acerto crítico!”</span>.
+  <div class=”callout”>
+    <strong>Receita: dado explosivo.</strong> Rerola enquanto sair 6, no máximo 5 vezes; ao sair 6, soma 1d8 e anuncia <span class=”italic”>”Acerto crítico!”</span>.
   </div>
-<pre data-lang="exemplo">/<span class="tk-key">tag criar</span> nome:<span class="tk-str">explodir</span> condicoes:<span class="tk-str">max,tentativas:5,gatilho:6:1d8,texto:6:Acerto crítico!</span> exibicao:<span class="tk-str">Todas as tentativas</span>
-<span class="tk-num">2d6</span> <span class="tk-tag">explodir</span> Ada</pre>
+<pre data-lang=”exemplo”>/<span class=”tk-key”>tag criar</span> nome:<span class=”tk-str”>explodir</span> condicoes:<span class=”tk-str”>max,tentativas:5,gatilho:6:1d8,texto:6:Acerto crítico!</span> exibicao:<span class=”tk-str”>Todas as tentativas</span>
+/<span class=”tk-key”>tag criar</span> nome:<span class=”tk-str”>foco</span>    condicoes:<span class=”tk-str”>max</span> exibicao:<span class=”tk-str”>Todas as tentativas</span>
+/<span class=”tk-key”>tag criar</span> nome:<span class=”tk-str”>sorte</span>   condicoes:<span class=”tk-str”>valor:20,tentativas:3</span> exibicao:<span class=”tk-str”>Todas as tentativas</span>
+/<span class=”tk-key”>tag listar</span>
+/<span class=”tk-key”>tag deletar</span> nome:<span class=”tk-str”>foco</span></pre>
+
+  <h3>Usando uma tag</h3>
+  <p>Escreva o nome da tag após a expressão de dados — no chat ou via <code>/rolar</code>:</p>
+<pre data-lang=”usando”><span class=”tk-num”>1d20</span> <span class=”tk-tag”>foco</span> Ada
+<span class=”tk-num”>2d8+2</span> <span class=”tk-tag”>explodir</span> Goblin dano</pre>
 </section>
 
 <!-- PERSONAGENS ============================ -->
@@ -259,14 +274,20 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd">/<b>personagem criar</b></span><span class="desc">Cria um PC ou NPC base.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>personagem ver</b> nome</span><span class="desc">Exibe HP, escudo e status ativos.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>personagem listar</b></span><span class="desc">Lista todos os personagens da sessão.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>personagem editar</b> nome</span><span class="desc">Atualiza atributos individuais.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>personagem editar</b> nome campo valor</span><span class="desc">Edita um campo da ficha (<em>hp</em>, <em>emoji</em>, <em>escudo</em>, …).</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>personagem remover</b> nome</span><span class="desc">Remove o personagem da sessão.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>personagem ativar</b> nome</span><span class="desc">Define o personagem ativo do jogador na sessão.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>personagem meus</b></span><span class="desc">Lista seus personagens em qualquer sessão.</span></div>
   </div>
 
-<pre data-lang="exemplo">/<span class="tk-key">personagem criar</span> nome:<span class="tk-str">Ada</span> hp:<span class="tk-num">40</span> emoji:<span class="tk-str">🧝</span> jogador:<span class="tk-tag">@fulano</span>
-/<span class="tk-key">personagem editar</span> nome:<span class="tk-str">Ada</span> hp:<span class="tk-num">50</span></pre>
+<pre data-lang="exemplo">/<span class="tk-key">personagem criar</span> nome:<span class="tk-str">Ada</span>    hp:<span class="tk-num">60</span>  emoji:<span class="tk-str">🗡️</span>
+/<span class="tk-key">personagem criar</span> nome:<span class="tk-str">Thorin</span> hp:<span class="tk-num">80</span>  crit:<span class="tk-num">20</span> jogador:<span class="tk-tag">@fulano</span>
+/<span class="tk-key">personagem editar</span> nome:<span class="tk-str">Ada</span> campo:<span class="tk-str">hp</span>    valor:<span class="tk-num">70</span>
+/<span class="tk-key">personagem editar</span> nome:<span class="tk-str">Ada</span> campo:<span class="tk-str">emoji</span> valor:<span class="tk-str">⚔️</span>
+/<span class="tk-key">personagem ativar</span> nome:<span class="tk-str">Ada</span>
+/<span class="tk-key">personagem ver</span>    nome:<span class="tk-str">Ada</span>
+/<span class="tk-key">personagem meus</span>
+/<span class="tk-key">personagem listar</span></pre>
 
   <h3>Opções de criar / editar</h3>
   <div class="grimoire two-narrow">
@@ -276,6 +297,7 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd"><b>jogador:</b></span><span class="desc">@usuário associado ao personagem.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>escudo:</b></span><span class="desc">Valor máximo de escudo arcano.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>salvaguarda:</b></span><span class="desc">Se o escudo bloqueia dano excedente ao HP.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>crit:</b></span><span class="desc">Atalho para <em>crit_threshold</em> na criação — define o limiar de HP crítico.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>crit_threshold:</b></span><span class="desc">Aviso de HP crítico quando HP ≤ N.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>overheal:</b></span><span class="desc">Cura além do HP máximo: <em>cap</em> (ignora) ou <em>shield</em> (converte em escudo).</span></div>
   </div>
@@ -299,8 +321,17 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
   </div>
 
   <div class="examples">
-<pre data-lang="slash">/<span class="tk-key">dano</span> personagem:<span class="tk-str">Ada</span> valor:<span class="tk-num">10</span></pre>
-<pre data-lang="prefixo">!<span class="tk-key">dano</span> personagem:<span class="tk-str">Ada</span> valor:<span class="tk-num">10</span></pre>
+<pre data-lang="slash">/<span class="tk-key">dano</span>   personagem:<span class="tk-str">Ada</span>    valor:<span class="tk-num">15</span>
+/<span class="tk-key">dano</span>   personagem:<span class="tk-str">👺</span>     valor:<span class="tk-num">8</span>
+/<span class="tk-key">curar</span>  personagem:<span class="tk-str">Thorin</span> valor:<span class="tk-num">12</span>
+/<span class="tk-key">escudo</span> personagem:<span class="tk-str">Ada</span>    valor:<span class="tk-num">10</span>
+/<span class="tk-key">escudo</span> personagem:<span class="tk-str">Ada</span>    valor:<span class="tk-num">0</span>
+/<span class="tk-key">vida</span>   personagem:<span class="tk-str">Ada</span>    valor:<span class="tk-num">50</span></pre>
+<pre data-lang="prefixo">!<span class="tk-key">dano</span>  personagem:<span class="tk-str">Ada</span> valor:<span class="tk-num">10</span>
+!<span class="tk-key">curar</span> personagem:<span class="tk-str">Ada</span> valor:<span class="tk-num">12</span></pre>
+  </div>
+  <div class="callout">
+    <strong>Remover escudo.</strong> Use <code>/escudo personagem:X valor:0</code> para zerar e remover o escudo de um personagem.
   </div>
 </section>
 
@@ -315,10 +346,10 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
 
   <div class="grimoire">
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>npc criar</b> nome hp</span><span class="desc">Cria um NPC base.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>npc criar</b> nome hp [crit]</span><span class="desc">Cria um NPC base. <em>crit</em> define o limiar de HP crítico.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>npc ver</b> nome</span><span class="desc">Exibe o status do NPC.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>npc editar</b> nome</span><span class="desc">Atualiza atributos.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>npc replicar</b> nome quantidade</span><span class="desc">Cria cópias independentes de um NPC base.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>npc editar</b> nome campo valor</span><span class="desc">Edita um campo do NPC (<em>hp</em>, <em>emoji</em>, …).</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>npc replicar</b> nome quantidade</span><span class="desc">Cria cópias numeradas: Goblin-1, Goblin-2, Goblin-3…</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>npc resetar</b> nome</span><span class="desc">Restaura HP máximo e zera os status.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>npc listar</b></span><span class="desc">Lista todos os NPCs com HP e status. 🟢 &gt;50% · 🟡 &gt;25% · 🔴 ≤25%.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>npc remover</b> nome</span><span class="desc">Remove um ou mais NPCs.</span></div>
@@ -328,7 +359,10 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <strong>Alvo amplo.</strong> <code>resetar</code> e <code>remover</code> aceitam nome exato, prefixo de grupo
     (ex.: <code>Goblin</code> afeta todos que começam com “Goblin”) ou a palavra <code>todos</code>.
   </div>
-<pre data-lang="exemplo">/<span class="tk-key">npc replicar</span> nome:<span class="tk-str">Goblin</span> quantidade:<span class="tk-num">3</span> sufixos:<span class="tk-str">A,B,C</span>
+<pre data-lang="exemplo">/<span class="tk-key">npc criar</span>    nome:<span class="tk-str">Goblin</span> hp:<span class="tk-num">30</span> emoji:<span class="tk-str">👺</span>
+/<span class="tk-key">npc criar</span>    nome:<span class="tk-str">Ogro</span>   hp:<span class="tk-num">80</span> crit:<span class="tk-num">25</span>
+/<span class="tk-key">npc editar</span>   nome:<span class="tk-str">Goblin</span> campo:<span class="tk-str">hp</span> valor:<span class="tk-num">40</span>
+/<span class="tk-key">npc replicar</span> nome:<span class="tk-str">Goblin</span> quantidade:<span class="tk-num">3</span>
 /<span class="tk-key">npc resetar</span>  nome:<span class="tk-str">Goblin</span>
 /<span class="tk-key">npc remover</span>  nome:<span class="tk-str">todos</span></pre>
 </section>
@@ -343,15 +377,17 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
   </p>
 
   <h3>Aplicar</h3>
-<pre data-lang="aplicar">/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Ada</span> nome:<span class="tk-str">Veneno</span> duracao:<span class="tk-num">3</span> efeito:<span class="tk-str">dano</span> valor:<span class="tk-num">5</span>
-/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Baruk</span> nome:<span class="tk-str">"Escudo Arcano"</span> efeito:<span class="tk-str">escudo</span> valor:<span class="tk-num">10</span>
-/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Ada</span> nome:<span class="tk-str">Amaldiçoado</span></pre>
+<pre data-lang="aplicar">/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Ada</span>    nome:<span class="tk-str">Veneno</span>       duracao:<span class="tk-num">3</span> efeito:<span class="tk-str">⚔️ Dano</span>   valor:<span class="tk-num">5</span>
+/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Thorin</span> nome:<span class="tk-str">Bênção</span>       duracao:<span class="tk-num">2</span> efeito:<span class="tk-str">💚 Cura</span>   valor:<span class="tk-num">3</span>
+/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Ada</span>    nome:<span class="tk-str">"Escudo Arcano"</span>           efeito:<span class="tk-str">🛡️ Escudo</span> valor:<span class="tk-num">10</span>
+/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Ada</span>    nome:<span class="tk-str">Atordoado</span>                              <span class="tk-cmt"># sem duração = permanente</span>
+/<span class="tk-key">status aplicar</span> personagem:<span class="tk-str">Ada</span>    nome:<span class="tk-str">Fraqueza</span>    fonte:<span class="tk-str">"Aranha Venenosa"</span></pre>
 
   <h4>Parâmetros</h4>
   <div class="grimoire two-narrow">
     <div class="grimoire-head"><span>Parâmetro</span><span>Descrição</span></div>
     <div class="grimoire-row"><span class="cmd"><b>duracao</b></span><span class="desc">Em rodadas — omitir torna o status permanente.</span></div>
-    <div class="grimoire-row"><span class="cmd"><b>efeito</b></span><span class="desc"><em>dano</em>, <em>cura</em> ou <em>escudo</em> por rodada.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>efeito</b></span><span class="desc">⚔️ <em>dano</em>, 💚 <em>cura</em> ou 🛡️ <em>escudo</em> por rodada. Aceita o emoji ou o texto.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>valor</b></span><span class="desc">Obrigatório se houver efeito definido.</span></div>
     <div class="grimoire-row"><span class="cmd"><b>fonte</b></span><span class="desc">Nota sobre a origem do status.</span></div>
   </div>
@@ -377,17 +413,20 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
   <h3>Pelo Mestre</h3>
   <div class="grimoire">
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>iniciativa adicionar</b> nome valor</span><span class="desc">Adiciona NPC ou inimigo com valor fixo.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>iniciativa adicionar</b> nome valor [turnos]</span><span class="desc">Adiciona NPC ou inimigo com valor fixo. <em>turnos</em> = quantos turnos por rodada.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>iniciativa remover</b> nome</span><span class="desc">Remove todas as entradas com esse nome.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>iniciativa limpar</b></span><span class="desc">Reseta toda a ordem.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>iniciativa ver</b></span><span class="desc">Exibe a ordem atual.</span></div>
   </div>
 
   <div class="callout">
-    <strong>Múltiplos turnos.</strong> O parâmetro <code>slots</code> em <code>adicionar</code> permite que um NPC tenha
-    mais de um turno por rodada.
+    <strong>Múltiplos turnos.</strong> O parâmetro <code>turnos</code> (ou <code>slots</code>) em <code>adicionar</code> permite que um NPC aja mais de uma vez por rodada.
   </div>
-<pre data-lang="slots">/<span class="tk-key">iniciativa adicionar</span> nome:<span class="tk-str">Dracolich</span> valor:<span class="tk-num">20</span> tipo:<span class="tk-str">inimigo</span> slots:<span class="tk-num">2</span></pre>
+<pre data-lang="exemplos">/<span class="tk-key">iniciativa adicionar</span> nome:<span class="tk-str">Goblin</span>    valor:<span class="tk-num">14</span>
+/<span class="tk-key">iniciativa adicionar</span> nome:<span class="tk-str">Dracolich</span> valor:<span class="tk-num">20</span> turnos:<span class="tk-num">2</span>
+/<span class="tk-key">iniciativa ver</span>
+/<span class="tk-key">iniciativa remover</span> nome:<span class="tk-str">Goblin</span>
+/<span class="tk-key">iniciativa limpar</span></pre>
 </section>
 
 <!-- TURNOS ============================ -->
@@ -466,6 +505,7 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd">/<b>mapa coluna</b> letra tipos</span><span class="desc">Preenche uma coluna inteira.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa submatriz</b> de ate tipos</span><span class="desc">Preenche uma região retangular.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa celula</b> pos tipo</span><span class="desc">Altera uma célula individual.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>mapa celula ver</b> pos</span><span class="desc">Inspeciona o conteúdo de uma célula.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa legenda</b> emoji descricao</span><span class="desc">Adiciona entrada na legenda.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa carregar</b> id</span><span class="desc">Troca o mapa ativo da sessão.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>mapa terreno</b> tipo x y</span><span class="desc">Define o terreno de uma célula do grid. <em>mestre</em></span></div>
@@ -488,10 +528,13 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
   <h3>Movimentação</h3>
   <div class="grimoire">
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>mapa mover</b> emoji celula</span><span class="desc">Move personagem para uma célula.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>mapa cobertura</b> emoji [nota]</span><span class="desc">Alterna a cobertura do personagem.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>mapa inimigo mover</b> nome pos</span><span class="desc">Move inimigo menor ou marca como “fora”.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>mapa efeito</b> id valor</span><span class="desc">Atualiza efeito de turno (ex.: nível da água).</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa mover</b> nome destino</span><span class=”desc”>Move personagem ou token para uma célula.</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa cobertura adicionar</b> de para</span><span class=”desc”>Cria linha de cobertura entre dois tokens.</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa cobertura remover</b> de para</span><span class=”desc”>Remove uma linha de cobertura.</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa cobertura listar</b></span><span class=”desc”>Lista todas as coberturas ativas no mapa.</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa inimigo mover</b> nome pos</span><span class=”desc”>Move inimigo menor ou marca como “fora”.</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa efeito adicionar</b> nome posicao raio emoji</span><span class=”desc”>Adiciona efeito de área com raio (ex.: 🔥 Chamas).</span></div>
+    <div class=”grimoire-row”><span class=”cmd”>/<b>mapa efeito remover</b> nome</span><span class=”desc”>Remove um efeito de área do mapa.</span></div>
   </div>
 
   <h3>Painéis de personagens, NPCs, inimigos &amp; itens</h3>
@@ -504,10 +547,13 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd">/<b>mapa item adicionar</b> label celula [emoji]</span><span class="desc">Adiciona um item ao mapa.</span></div>
   </div>
 
-<pre data-lang="painel">/<span class="tk-key">mapa personagem adicionar</span> emoji:<span class="tk-str">🧝</span> nome:<span class="tk-str">Ada</span> local:<span class="tk-str">C3</span>
-/<span class="tk-key">mapa npc adicionar</span>        nome:<span class="tk-str">Goblin</span> local:<span class="tk-str">E5</span>
+<pre data-lang="painel">/<span class="tk-key">mapa personagem adicionar</span> emoji:<span class="tk-str">🧝</span> nome:<span class="tk-str">Ada</span>    local:<span class="tk-str">C3</span>
+/<span class="tk-key">mapa npc adicionar</span>        nome:<span class="tk-str">Goblin</span>           local:<span class="tk-str">E5</span>
 /<span class="tk-key">mapa inimigo adicionar</span>    nome:<span class="tk-str">Dragão</span> quantidade:<span class="tk-num">1</span> local:<span class="tk-str">B2</span>
-/<span class="tk-key">mapa item adicionar</span>       label:<span class="tk-str">Tocha</span> celula:<span class="tk-str">A1</span> emoji:<span class="tk-str">🔦</span></pre>
+/<span class="tk-key">mapa item adicionar</span>       label:<span class="tk-str">Tocha</span>            celula:<span class="tk-str">A1</span> emoji:<span class="tk-str">🔦</span>
+/<span class="tk-key">mapa efeito adicionar</span>     nome:<span class="tk-str">Chamas</span> posicao:<span class="tk-str">A1</span> raio:<span class="tk-num">2</span> emoji:<span class="tk-str">🔥</span>
+/<span class="tk-key">mapa cobertura adicionar</span>  de:<span class="tk-str">Ada</span> para:<span class="tk-str">Goblin</span>
+/<span class="tk-key">mapa celula ver</span>           pos:<span class="tk-str">C3</span></pre>
 </section>
 
 <!-- SESSÃO ============================ -->
@@ -525,10 +571,25 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-row"><span class="cmd">/<b>rpg entrar</b> id</span><span class="desc">Vincula outro canal à sessão existente.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>rpg encerrar</b></span><span class="desc">Desvincula o canal da sessão.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>rpg listar</b></span><span class="desc">Lista todas as sessões do servidor.</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>rpg status</b> estado</span><span class="desc">Altera o estado da sessão (<em>online</em> / <em>offline</em>).</span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>rpg deletar</b> id</span><span class="desc">Remove a sessão permanentemente. <em>mestre</em></span></div>
-    <div class="grimoire-row"><span class="cmd">/<b>rpg configurar</b></span><span class="desc">Ajusta exibição do tracker e modo de decremento.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>rpg status</b> estado</span><span class="desc">Altera o estado: <em>🟢 Ativa</em> ou <em>🔴 Offline</em>. <em>dono da sessão</em></span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>rpg deletar</b> id</span><span class="desc">Remove a sessão permanentemente. <em>dono da sessão</em></span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>rpg configurar</b></span><span class="desc">Ajusta exibição do tracker, efeitos e modo de decremento. <em>dono da sessão</em></span></div>
   </div>
+
+  <h3>Configurar sessão</h3>
+  <div class="grimoire three">
+    <div class="grimoire-head"><span>Parâmetro</span><span>Opções</span><span>Descrição</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>status_tracker</b></span><span class="cmd">Mostrar · Ocultar</span><span class="desc">Exibe ou oculta os status no tracker de turno.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>efeitos_tracker</b></span><span class="cmd">Mostrar · Ocultar</span><span class="desc">Exibe ou oculta os efeitos de status no tracker.</span></div>
+    <div class="grimoire-row"><span class="cmd"><b>decremento</b></span><span class="cmd">Por rodada · Por turno</span><span class="desc">Quando os status têm duração decrementada.</span></div>
+  </div>
+<pre data-lang="exemplos">/<span class="tk-key">rpg criar</span>      id:<span class="tk-str">campanha-principal</span>
+/<span class="tk-key">rpg entrar</span>     id:<span class="tk-str">campanha-principal</span>
+/<span class="tk-key">rpg status</span>     estado:<span class="tk-str">🟢 Ativa</span>
+/<span class="tk-key">rpg status</span>     estado:<span class="tk-str">🔴 Offline</span>
+/<span class="tk-key">rpg configurar</span> status_tracker:<span class="tk-str">Mostrar</span>  decremento:<span class="tk-str">Por rodada</span>
+/<span class="tk-key">rpg configurar</span> efeitos_tracker:<span class="tk-str">Ocultar</span> decremento:<span class="tk-str">Por turno</span>
+/<span class="tk-key">rpg deletar</span>    id:<span class="tk-str">campanha-principal</span></pre>
 </section>
 
 <!-- MÚSICA ============================ -->
@@ -578,14 +639,30 @@ USE_LOCAL_DATA=<span class="tk-num">true</span></pre>
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>queue</b> [pagina]</span><span class="desc">Exibe a fila paginada (10 por página).</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>remove</b> posicao</span><span class="desc">Remove uma música da fila pelo número.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>move</b> posicao destino</span><span class="desc">Move uma faixa para outra posição na fila.</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>clear</b></span><span class="desc">Limpa toda a fila (a atual continua tocando).</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>shuffle</b></span><span class="desc">Embaralha a ordem da fila.</span></div>
   </div>
 
+  <h3 id="musica-loop">Repetição</h3>
+  <div class="grimoire">
+    <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>loop</b> track</span><span class="desc">🔂 Repete a música atual indefinidamente.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>loop</b> queue</span><span class="desc">🔁 Repete a fila inteira em loop contínuo.</span></div>
+    <div class="grimoire-row"><span class="cmd">/<b>loop</b> disable</span><span class="desc">➡️ Desativa o loop e retorna à reprodução normal.</span></div>
+  </div>
+
+  <div class="callout">
+    <strong>Fallback automático.</strong> Quando o YouTube bloquear a extração, o bot usa o SoundCloud automaticamente como fonte alternativa.
+  </div>
+
   <div class="examples">
-<pre data-lang="play">/<span class="tk-key">play</span>   <span class="tk-str">lofi hip hop</span>
-/<span class="tk-key">queue</span>  pagina:<span class="tk-num">2</span>
-/<span class="tk-key">remove</span> posicao:<span class="tk-num">3</span></pre>
+<pre data-lang="fila">/<span class="tk-key">queue</span>  pagina:<span class="tk-num">2</span>
+/<span class="tk-key">remove</span> posicao:<span class="tk-num">3</span>
+/<span class="tk-key">move</span>   posicao:<span class="tk-num">35</span> destino:<span class="tk-num">1</span>
+/<span class="tk-key">loop</span>   track
+/<span class="tk-key">loop</span>   queue
+/<span class="tk-key">loop</span>   disable</pre>
 <pre data-lang=".env">SPOTIFY_CLIENT_ID=<span class="tk-str">seu_client_id</span>
 SPOTIFY_CLIENT_SECRET=<span class="tk-str">seu_client_secret</span>
 SPOTIFY_REDIRECT_URI=<span class="tk-str">https://…/spotify-callback/</span>
@@ -612,9 +689,13 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
 !comando grupo subcomando chave:valor ...</pre>
 
   <div class="grimoire">
-    <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
+    <div class="grimoire-head"><span>Prefixo</span><span>Equivalente slash</span></div>
     <div class="grimoire-row"><span class="cmd">!<b>help</b> · !<b>ajuda</b></span><span class="desc">Lista todos os comandos disponíveis.</span></div>
     <div class="grimoire-row"><span class="cmd">!<b>setprefix</b> &lt;p&gt;</span><span class="desc">Muda o prefixo do servidor. <em>mestre</em></span></div>
+    <div class="grimoire-row"><span class="cmd">!<b>rolar</b> &lt;expressão&gt;</span><span class="desc">Equivalente a <code>/rolar</code>.</span></div>
+    <div class="grimoire-row"><span class="cmd">!<b>play</b> &lt;query&gt;</span><span class="desc">Equivalente a <code>/play</code>.</span></div>
+    <div class="grimoire-row"><span class="cmd">!<b>skip</b> · !<b>stop</b> · !<b>pause</b> · !<b>resume</b></span><span class="desc">Controles de música via texto.</span></div>
+    <div class="grimoire-row"><span class="cmd">!<b>move</b> de:&lt;n&gt; para:&lt;m&gt;</span><span class="desc">Move faixa na fila. Equivalente a <code>/move</code>.</span></div>
   </div>
 
   <div class="callout">
@@ -676,6 +757,33 @@ SPOTIFY_REFRESH_TOKEN=<span class="tk-str">token_gerado</span></pre>
   <div class="grimoire">
     <div class="grimoire-head"><span>Comando</span><span>O que faz</span></div>
     <div class="grimoire-row"><span class="cmd">/<b>help</b></span><span class="desc">Lista todos os comandos disponíveis com link para a documentação.</span></div>
+  </div>
+</section>
+
+<!-- PERMISSÕES ============================ -->
+<section class="doc" id="permissoes" data-section="Permissões">
+  <div class="eyebrow">xv · sistema</div>
+  <h2>Permissões</h2>
+  <p class="lede">
+    Cada grupo de comandos exige um nível de permissão diferente. O cargo de Mestre é configurado
+    por servidor via <code>/config cargo-mestre</code>.
+  </p>
+
+  <div class="grimoire">
+    <div class="grimoire-head"><span>Ação</span><span>Quem pode</span></div>
+    <div class="grimoire-row"><span class="cmd">Rolagem de dados</span><span class="desc">Qualquer membro.</span></div>
+    <div class="grimoire-row"><span class="cmd">Comandos de música</span><span class="desc">Qualquer membro no canal de voz.</span></div>
+    <div class="grimoire-row"><span class="cmd">Gerenciar personagens próprios</span><span class="desc">Qualquer membro.</span></div>
+    <div class="grimoire-row"><span class="cmd">Criar e editar personagens / NPCs</span><span class="desc">Cargo de <strong>Mestre</strong> ou Administrador.</span></div>
+    <div class="grimoire-row"><span class="cmd">Gerenciar iniciativa e turnos</span><span class="desc">Cargo de <strong>Mestre</strong> ou Administrador.</span></div>
+    <div class="grimoire-row"><span class="cmd">Criar e deletar tags</span><span class="desc">Cargo de <strong>Mestre</strong> ou Administrador.</span></div>
+    <div class="grimoire-row"><span class="cmd">Criar e configurar sessões RPG</span><span class="desc">Cargo de <strong>Mestre</strong> ou Administrador.</span></div>
+    <div class="grimoire-row"><span class="cmd">Deletar sessão RPG</span><span class="desc">Dono da sessão ou Administrador.</span></div>
+    <div class="grimoire-row"><span class="cmd">Configurar o bot (<code>/config</code>)</span><span class="desc">Administrador do servidor.</span></div>
+  </div>
+
+  <div class="callout">
+    <strong>Definir o cargo de Mestre.</strong> Use <code>/config cargo-mestre cargo:@NomeDoCarco</code>. Sem configuração, o bot usa o nome definido em <code>MASTER_ROLE</code> no <code>.env</code>.
   </div>
 </section>
 
